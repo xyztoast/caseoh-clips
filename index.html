@@ -742,7 +742,7 @@
 
     <header>
         <a href="#" class="logo">
-            <div class="logo-box">C</div>
+            <div class="logo-box"><img src="https://caseoh.mcbcode.com/caseoh.jpg" style="width: 35px; border-radius: 5px;"></div>
             caseoh clips
         </a>
 
@@ -764,9 +764,7 @@
     <section class="hero">
 
         <div>
-            <div class="hero-tag">
-                community clips
-            </div>
+
 
             <h1>
                 the best<br>
@@ -906,7 +904,7 @@ async function loadClips() {
         });
 
         const twitchResponse = await fetch(
-            `https://twitch-api.mcbcode.com/clips?${params.toString()}`
+            `https://caseoh.mcbcode.workers.dev/clips?${params.toString()}`
         );
 
         if (!twitchResponse.ok) {
