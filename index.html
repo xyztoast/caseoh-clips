@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>caseoh clips</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0e0e10;
+            --surface: #18181b;
+            --surface-hover: #202024;
+            --border: #2a2a2e;
+
+            --text: #efeff1;
+            --muted: #adadb8;
+
+            --purple: #9147ff;
+            --purple-light: #a970ff;
+            --purple-dark: #772ce8;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* header */
+
+        header {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 40px;
+
+            border-bottom: 1px solid var(--border);
+
+            background: rgba(14, 14, 16, 0.92);
+            backdrop-filter: blur(14px);
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 7px;
+
+            background: var(--purple);
+            color: white;
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+
+            color: var(--muted);
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        nav a {
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .search input {
+            width: 240px;
+
+            padding: 10px 14px;
+
+            border: 1px solid var(--border);
+            border-radius: 7px;
+
+            outline: none;
+
+            background: var(--surface);
+            color: white;
+        }
+
+        .search input:focus {
+            border-color: var(--purple);
+        }
+
+        /* hero */
+
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+
+            padding: 80px 30px 55px;
+
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 50px;
+
+            align-items: center;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+
+            padding: 7px 11px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid rgba(145, 71, 255, 0.35);
+            border-radius: 6px;
+
+            background: rgba(145, 71, 255, 0.1);
+
+            color: var(--purple-light);
+
+            font-size: 12px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 70px);
+            line-height: 0.98;
+
+            letter-spacing: -0.045em;
+
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: var(--purple);
+        }
+
+        .hero p {
+            max-width: 580px;
+
+            margin-bottom: 28px;
+
+            color: var(--muted);
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 12px 18px;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .button-primary {
+            background: var(--purple);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--purple-dark);
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 8px 24px rgba(145, 71, 255, 0.3);
+        }
+
+        .button-secondary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+        }
+
+        .button-secondary:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+        }
+
+        /* featured */
+
+        .featured {
+            overflow: hidden;
+
+            padding: 16px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(145, 71, 255, 0.18),
+                    rgba(14, 14, 16, 0.9)
+                );
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35),
+                inset 0 0 50px rgba(145, 71, 255, 0.05);
+        }
+
+        .featured-preview {
+            aspect-ratio: 16 / 9;
+
+            overflow: hidden;
+
+            border-radius: 8px;
+
+            background: #111114;
+        }
+
+        .featured-preview img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+        }
+
+        .featured-info {
+            padding: 17px 3px 4px;
+        }
+
+        .featured-info span {
+            color: var(--purple-light);
+
+            font-size: 11px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .featured-info h3 {
+            margin-top: 7px;
+
+            font-size: 19px;
+            line-height: 1.3;
+        }
+
+        /* main */
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+
+            padding: 20px 30px 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            letter-spacing: -0.025em;
+        }
+
+        .section-header p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+
+            margin-bottom: 24px;
+
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter {
+            white-space: nowrap;
+
+            padding: 8px 12px;
+
+            border: 1px solid var(--border);
+            border-radius: 6px;
+
+            background: var(--surface);
+
+            color: var(--muted);
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .filter:hover,
+        .filter.active {
+            background: rgba(145, 71, 255, 0.12);
+            color: var(--purple-light);
+            border-color: rgba(145, 71, 255, 0.4);
+        }
+
+        /* clips */
+
+        .clips {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+        .clip {
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            background: var(--surface);
+
+            cursor: pointer;
+
+            transition:
+                transform 0.22s ease,
+                border-color 0.22s ease,
+                box-shadow 0.22s ease,
+                background 0.22s ease;
+        }
+
+        .clip:hover {
+            transform: translateY(-6px) scale(1.01);
+
+            background: var(--surface-hover);
+
+            border-color: rgba(145, 71, 255, 0.55);
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(145, 71, 255, 0.12);
+        }
+
+        .thumbnail {
+            position: relative;
+
+            aspect-ratio: 16 / 9;
+
+            overflow: hidden;
+
+            background: #111114;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            transition: transform 0.3s ease;
+        }
+
+        .clip:hover .thumbnail img {
+            transform: scale(1.04);
+        }
+
+        .thumbnail::after {
+            content: "▶";
+
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            width: 48px;
+            height: 48px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 50%;
+
+            background: rgba(145, 71, 255, 0.92);
+            color: white;
+
+            font-size: 16px;
+
+            opacity: 0;
+
+            transform: translate(-50%, -50%) scale(0.8);
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .clip:hover .thumbnail::after {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .duration {
+            position: absolute;
+
+            right: 8px;
+            bottom: 8px;
+
+            z-index: 2;
+
+            padding: 4px 6px;
+
+            border-radius: 4px;
+
+            background: rgba(0, 0, 0, 0.8);
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .clip-info {
+            padding: 14px;
+        }
+
+        .clip-info h3 {
+            margin-bottom: 10px;
+
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .clip-meta {
+            display: flex;
+            justify-content: space-between;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .clip-meta span:first-child {
+            color: var(--purple-light);
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+
+            padding: 50px 20px;
+
+            text-align: center;
+
+            color: var(--muted);
+        }
+
+        /* footer */
+
+        footer {
+            padding: 30px;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--muted);
+
+            text-align: center;
+
+            font-size: 12px;
+        }
+
+        footer strong {
+            color: var(--text);
+        }
+
+        /* responsive */
+
+        @media (max-width: 900px) {
+            header {
+                padding: 0 20px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .search input {
+                width: 180px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .clips {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                height: 64px;
+            }
+
+            .search {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 55px;
+                padding-bottom: 35px;
+            }
+
+            main {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .clips {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <div class="logo-box">C</div>
+            caseoh clips
+        </a>
+
+        <nav>
+            <a href="#">home</a>
+            <a href="#clips">clips</a>
+            <a href="#">about</a>
+        </nav>
+
+        <div class="search">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="search clips..."
+            >
+        </div>
+    </header>
+
+    <section class="hero">
+
+        <div>
+            <div class="hero-tag">
+                community clips
+            </div>
+
+            <h1>
+                the best<br>
+                <span>caseoh clips.</span>
+            </h1>
+
+            <p>
+                a collection of funny, chaotic, and completely unnecessary
+                caseoh moments. because apparently humanity needed a database
+                for this.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="#clips" class="button button-primary">
+                    browse clips
+                </a>
+
+                <a href="#" class="button button-secondary">
+                    submit a clip
+                </a>
+            </div>
+        </div>
+
+        <a href="#" id="featuredClip" class="featured">
+            <div class="featured-preview">
+                <img id="featuredThumbnail" src="" alt="">
+            </div>
+
+            <div class="featured-info">
+                <span>featured</span>
+                <h3 id="featuredTitle">loading...</h3>
+            </div>
+        </a>
+
+    </section>
+
+    <main id="clips">
+
+        <div class="section-header">
+            <div>
+                <h2>latest clips</h2>
+                <p id="clipCount">loading clips...</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter active" data-category="all">all</button>
+            <button class="filter" data-category="funny">funny</button>
+            <button class="filter" data-category="rage">rage</button>
+            <button class="filter" data-category="gaming">gaming</button>
+            <button class="filter" data-category="chat">chat</button>
+            <button class="filter" data-category="classic">classic</button>
+        </div>
+
+        <div class="clips" id="clipGrid">
+            <div class="empty">
+                loading clips...
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <strong>caseoh clips</strong> · a fan-made clip archive
+    </footer>
+
+    <script>
+        const clipGrid = document.getElementById("clipGrid");
+        const searchInput = document.getElementById("searchInput");
+        const clipCount = document.getElementById("clipCount");
+
+        const featuredClip = document.getElementById("featuredClip");
+        const featuredThumbnail = document.getElementById("featuredThumbnail");
+        const featuredTitle = document.getElementById("featuredTitle");
+
+        const filters = document.querySelectorAll(".filter");
+
+        let clips = [];
+        let activeCategory = "all";
+
+        async function loadClips() {
+            try {
+                const response = await fetch("clips.json");
+
+                if (!response.ok) {
+                    throw new Error("could not load clips.json");
+                }
+
+                clips = await response.json();
+
+                setupFeatured();
+                renderClips();
+
+            } catch (error) {
+                console.error(error);
+
+                clipGrid.innerHTML = `
+                    <div class="empty">
+                        couldn't load clips.json
+                    </div>
+                `;
+
+                clipCount.textContent = "error loading clips";
+            }
+        }
+
+        function setupFeatured() {
+            const featured = clips.find(clip => clip.featured);
+
+            if (!featured) {
+                featuredClip.style.display = "none";
+                return;
+            }
+
+            featuredThumbnail.src = featured.thumbnail;
+            featuredThumbnail.alt = featured.title;
+
+            featuredTitle.textContent = featured.title;
+
+            featuredClip.href = createTwitchEmbedUrl(featured.id);
+        }
+
+        function createTwitchEmbedUrl(id) {
+            const parent = window.location.hostname;
+
+            return `https://clips.twitch.tv/embed?clip=${encodeURIComponent(id)}&parent=${encodeURIComponent(parent)}&autoplay=true&muted=false`;
+        }
+
+        function renderClips() {
+            const search = searchInput.value.trim().toLowerCase();
+
+            const filteredClips = clips.filter(clip => {
+                const matchesCategory =
+                    activeCategory === "all" ||
+                    clip.category.toLowerCase() === activeCategory;
+
+                const matchesSearch =
+                    !search ||
+                    clip.title.toLowerCase().includes(search) ||
+                    clip.category.toLowerCase().includes(search);
+
+                return matchesCategory && matchesSearch;
+            });
+
+            clipCount.textContent =
+                `${filteredClips.length} clip${filteredClips.length === 1 ? "" : "s"}`;
+
+            if (filteredClips.length === 0) {
+                clipGrid.innerHTML = `
+                    <div class="empty">
+                        no clips found
+                    </div>
+                `;
+
+                return;
+            }
+
+            clipGrid.innerHTML = filteredClips.map(clip => `
+                <a
+                    href="${createTwitchEmbedUrl(clip.id)}"
+                    class="clip"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <div class="thumbnail">
+                        <img
+                            src="${escapeHtml(clip.thumbnail)}"
+                            alt="${escapeHtml(clip.title)}"
+                            loading="lazy"
+                        >
+
+                        <span class="duration">
+                            ${escapeHtml(clip.duration || "")}
+                        </span>
+                    </div>
+
+                    <div class="clip-info">
+                        <h3>
+                            ${escapeHtml(clip.title)}
+                        </h3>
+
+                        <div class="clip-meta">
+                            <span>
+                                ${escapeHtml(clip.category)}
+                            </span>
+
+                            <span>
+                                ${escapeHtml(clip.views || "")} views
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            `).join("");
+        }
+
+        function escapeHtml(value) {
+            const div = document.createElement("div");
+
+            div.textContent = value ?? "";
+
+            return div.innerHTML;
+        }
+
+        searchInput.addEventListener("input", renderClips);
+
+        filters.forEach(filter => {
+            filter.addEventListener("click", () => {
+                filters.forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                filter.classList.add("active");
+
+                activeCategory = filter.dataset.category;
+
+                renderClips();
+            });
+        });
+
+        loadClips();
+    </script>
+
+</body>
+</html>
