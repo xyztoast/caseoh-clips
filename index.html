@@ -482,23 +482,48 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        .duration {
-            position: absolute;
+.duration {
+    position: absolute;
 
-            right: 8px;
-            bottom: 8px;
+    right: 8px;
+    bottom: 8px;
 
-            z-index: 2;
+    z-index: 2;
 
-            padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
-            border-radius: 4px;
+    padding: 4px 7px;
 
-            background: rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
 
-            font-size: 11px;
-            font-weight: 600;
-        }
+    background: rgba(0, 0, 0, 0.8);
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.duration .views {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.duration .views img {
+    width: 12px;
+    height: 12px;
+
+    display: block;
+
+    opacity: 0.8;
+}
+
+.duration .separator {
+    opacity: 0.55;
+}
 
         .clip-info {
             padding: 14px;
@@ -1156,11 +1181,24 @@ function renderClips() {
                     loading="lazy"
                 >
 
-                ${
-                    clip.duration
-                        ? `<span class="duration">${escapeHtml(clip.duration)}</span>`
-                        : ""
-                }
+${
+    clip.duration
+        ? `
+            <span class="duration">
+                <span class="views">
+                    <img src="/eye.png" alt="">
+                    ${formatViews(clip.viewCount)}
+                </span>
+
+                <span class="separator">|</span>
+
+                <span>
+                    ${escapeHtml(clip.duration)}
+                </span>
+            </span>
+        `
+        : ""
+}
 
             </div>
 
