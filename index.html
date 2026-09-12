@@ -1196,51 +1196,34 @@ function renderClips() {
 
 </div>
 
-            <div class="clip-info">
+<div class="clip-info">
 
-                <h3>
-                    ${escapeHtml(clip.title)}
-                </h3>
+    <h3>
+        ${escapeHtml(clip.title)}
+    </h3>
 
-<div class="clip-meta">
-
-    <span class="category">
-        ${escapeHtml(clip.category)}
-    </span>
-
-    <span class="clip-stats">
-
-        <span class="views">
-            <img src="/eye.png" alt="">
-            ${formatViews(clip.viewCount)}
+    <div class="clip-meta">
+        <span class="category">
+            ${escapeHtml(clip.category)}
         </span>
-
-        <span class="separator">|</span>
-
-        <span>
-            ${escapeHtml(clip.duration || "")}
-        </span>
-
-    </span>
+    </div>
 
 </div>
+</div>
+`).join("");
 
-            </div>
-        </div>
-    `).join("");
+document.querySelectorAll(".clip").forEach(element => {
+    element.addEventListener("click", () => {
 
-    document.querySelectorAll(".clip").forEach(element => {
-        element.addEventListener("click", () => {
+        const clip = clips.find(
+            item => item.id === element.dataset.clipId
+        );
 
-            const clip = clips.find(
-                item => item.id === element.dataset.clipId
-            );
-
-            if (clip) {
-                openClip(clip);
-            }
-        });
+        if (clip) {
+            openClip(clip);
+        }
     });
+});
 }
 
         function escapeHtml(value) {
