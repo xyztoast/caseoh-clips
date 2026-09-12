@@ -735,6 +735,21 @@
                 margin-top: 6px;
             }
         }
+.search-mode-hidden {
+    display: none !important;
+}
+
+.search-results-header {
+    display: none;
+}
+
+body.search-mode .search-results-header {
+    display: block;
+}
+
+body.search-mode #clips {
+    padding-top: 50px;
+}
     </style>
 </head>
 
@@ -804,7 +819,14 @@
     </section>
 
     <main id="clips">
-
+<div class="search-results-header">
+    <div class="section-header">
+        <div>
+            <h2 id="searchResultsTitle">search results</h2>
+            <p id="searchResultsCount"></p>
+        </div>
+    </div>
+</div>
         <div class="section-header">
             <div>
                 <h2>latest clips</h2>
@@ -877,6 +899,14 @@
         const popupTitle = document.getElementById("popupTitle");
         const popupCategory = document.getElementById("popupCategory");
         const popupClose = document.getElementById("popupClose");
+
+        const hero = document.querySelector(".hero");
+        const normalSectionHeader = document.querySelector("#clips > .section-header");
+        const filtersContainer = document.querySelector(".filters");
+
+        const searchResultsHeader = document.querySelector(".search-results-header");
+        const searchResultsTitle = document.getElementById("searchResultsTitle");
+        const searchResultsCount = document.getElementById("searchResultsCount");
 
         const filters = document.querySelectorAll(".filter");
 
@@ -1018,83 +1048,101 @@ function formatDuration(seconds) {
             }
         }
 
-        function renderClips() {
-            const search = searchInput.value.trim().toLowerCase();
+function renderClips() {
+    const search = searchInput.value.trim().toLowerCase();
 
-            const filteredClips = clips.filter(clip => {
-                const matchesCategory =
-                    activeCategory === "all" ||
-                    clip.category.toLowerCase() === activeCategory;
+    const isSearching = search.length > 0;
 
-                const matchesSearch =
-                    !search ||
-                    clip.title.toLowerCase().includes(search) ||
-                    clip.category.toLowerCase().includes(search);
+    document.body.classList.toggle("search-mode", isSearching);
 
-                return matchesCategory && matchesSearch;
-            });
+    hero.classList.toggle("search-mode-hidden", isSearching);
+    normalSectionHeader.classList.toggle("search-mode-hidden", isSearching);
+    filtersContainer.classList.toggle("search-mode-hidden", isSearching);
 
-            clipCount.textContent =
-                `${filteredClips.length} clip${filteredClips.length === 1 ? "" : "s"}`;
+    const filteredClips = clips.filter(clip => {
+        const matchesCategory =
+            activeCategory === "all" ||
+            clip.category.toLowerCase() === activeCategory;
 
-            if (filteredClips.length === 0) {
-                clipGrid.innerHTML = `
-                    <div class="empty">
-                        no clips found
-                    </div>
-                `;
+        const matchesSearch =
+            !search ||
+            clip.title.toLowerCase().includes(search) ||
+            clip.category.toLowerCase().includes(search);
 
-                return;
-            }
+        return matchesCategory && matchesSearch;
+    });
 
-            clipGrid.innerHTML = filteredClips.map(clip => `
-                <div
-                    class="clip"
-                    data-clip-id="${escapeHtml(clip.id)}"
+    if (isSearching) {
+        searchResultsTitle.textContent = `results for "${searchInput.value}"`;
+
+        searchResultsCount.textContent =
+            `${filteredClips.length} clip${filteredClips.length === 1 ? "" : "s"} found`;
+    } else {
+        clipCount.textContent =
+            `${filteredClips.length} clip${filteredClips.length === 1 ? "" : "s"}`;
+    }
+
+    if (filteredClips.length === 0) {
+        clipGrid.innerHTML = `
+            <div class="empty">
+                ${isSearching
+                    ? `no clips found for "${escapeHtml(searchInput.value)}"`
+                    : "no clips found"
+                }
+            </div>
+        `;
+
+        return;
+    }
+
+    clipGrid.innerHTML = filteredClips.map(clip => `
+        <div
+            class="clip"
+            data-clip-id="${escapeHtml(clip.id)}"
+        >
+            <div class="thumbnail">
+
+                <img
+                    src="${escapeHtml(clip.thumbnail)}"
+                    alt="${escapeHtml(clip.title)}"
+                    loading="lazy"
                 >
-                    <div class="thumbnail">
 
-                        <img
-                            src="${escapeHtml(clip.thumbnail)}"
-                            alt="${escapeHtml(clip.title)}"
-                            loading="lazy"
-                        >
+                ${
+                    clip.duration
+                        ? `<span class="duration">${escapeHtml(clip.duration)}</span>`
+                        : ""
+                }
 
-                        ${
-                            clip.duration
-                                ? `<span class="duration">${escapeHtml(clip.duration)}</span>`
-                                : ""
-                        }
+            </div>
 
-                    </div>
+            <div class="clip-info">
 
-                    <div class="clip-info">
+                <h3>
+                    ${escapeHtml(clip.title)}
+                </h3>
 
-                        <h3>
-                            ${escapeHtml(clip.title)}
-                        </h3>
-
-                        <div class="clip-meta">
-                            ${escapeHtml(clip.category)}
-                        </div>
-
-                    </div>
+                <div class="clip-meta">
+                    ${escapeHtml(clip.category)}
                 </div>
-            `).join("");
 
-            document.querySelectorAll(".clip").forEach(element => {
-                element.addEventListener("click", () => {
+            </div>
+        </div>
+    `).join("");
 
-                    const clip = clips.find(
-                        item => item.id === element.dataset.clipId
-                    );
+    document.querySelectorAll(".clip").forEach(element => {
+        element.addEventListener("click", () => {
 
-                    if (clip) {
-                        openClip(clip);
-                    }
-                });
-            });
-        }
+            const clip = clips.find(
+                item => item.id === element.dataset.clipId
+            );
+
+            if (clip) {
+                openClip(clip);
+            }
+        });
+    });
+}
 
         function escapeHtml(value) {
             const div = document.createElement("div");
