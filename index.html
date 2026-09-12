@@ -885,33 +885,82 @@
         let clips = [];
         let activeCategory = "all";
 
-        async function loadClips() {
-            try {
-                const response = await fetch("clips.json", {
-                    cache: "no-store"
-                });
+async function loadClips() {
+    try {
+        const response = await fetch("clips.json", {
+            cache: "no-store"
+        });
 
-                if (!response.ok) {
-                    throw new Error("could not load clips.json");
+        if (!response.ok) {
+            throw new Error("could not load clips.json");
+        }
+
+        clips = await response.json();
+
+        const ids = clips.map(clip => clip.id);
+
+        const params = new URLSearchParams();
+
+        ids.forEach(id => {
+            params.append("id", id);
+        });
+
+        const twitchResponse = await fetch(
+            `https://twitch-api.mcbcode.com/clips?${params.toString()}`
+        );
+
+        if (!twitchResponse.ok) {
+            throw new Error("could not load twitch clip data");
+        }
+
+        const twitchData = await twitchResponse.json();
+
+        const twitchClips = twitchData.data || [];
+
+        const twitchById = new Map(
+            twitchClips.map(clip => [clip.id, clip])
+        );
+
+        clips = clips
+            .map(clip => {
+                const twitchClip = twitchById.get(clip.id);
+
+                if (!twitchClip) {
+                    return null;
                 }
 
-                clips = await response.json();
+                return {
+                    ...clip,
+                    thumbnail: twitchClip.thumbnail_url,
+                    duration: formatDuration(twitchClip.duration)
+                };
+            })
+            .filter(Boolean);
 
-                setupFeatured();
-                renderClips();
+        setupFeatured();
+        renderClips();
 
-            } catch (error) {
-                console.error(error);
+    } catch (error) {
+        console.error(error);
 
-                clipGrid.innerHTML = `
-                    <div class="empty">
-                        couldn't load clips.json
-                    </div>
-                `;
+        clipGrid.innerHTML = `
+            <div class="empty">
+                couldn't load clips
+            </div>
+        `;
 
-                clipCount.textContent = "error loading clips";
-            }
-        }
+        clipCount.textContent = "error loading clips";
+    }
+}
+
+function formatDuration(seconds) {
+    const totalSeconds = Math.floor(seconds);
+
+    const minutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = totalSeconds % 60;
+
+    return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
 
         function setupFeatured() {
             const featured = clips.find(clip => clip.featured);
