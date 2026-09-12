@@ -1,14 +1,18 @@
 [
   {
     "id": "HomelyAntsyLyrebirdSmoocherZ-gti3fZiX_Xp_65x0",
-    "title": "restroom workout",
+    "title": "bathroom workout",
     "category": "funny",
+    "thumbnail": "https://static-cdn.jtvnw.net/twitch-clips-thumbnails/HomelyAntsyLyrebirdSmoocherZ-gti3fZiX_Xp_65x0-480.jpg",
+    "duration": "0:15",
     "featured": true
   },
   {
     "id": "ANOTHER_CLIP_ID",
     "title": "tbd",
     "category": "chat",
+    "thumbnail": "https://static-cdn.jtvnw.net/twitch-clips-thumbnails/ANOTHER_CLIP_ID-480.jpg",
+    "duration": "0:42",
     "featured": false
   }
 ]
