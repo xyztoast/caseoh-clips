@@ -511,12 +511,46 @@
             line-height: 1.45;
         }
 
-        .clip-meta {
-            color: var(--purple-light);
+.clip-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-            font-size: 11px;
-            font-weight: 600;
-        }
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.clip-meta .category {
+    color: var(--purple-light);
+
+    font-weight: 600;
+}
+
+.clip-stats {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.views {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.views img {
+    width: 13px;
+    height: 13px;
+
+    display: block;
+
+    opacity: 0.75;
+}
+
+.separator {
+    opacity: 0.5;
+}
 
         .empty {
             grid-column: 1 / -1;
@@ -958,11 +992,12 @@ async function loadClips() {
                     return null;
                 }
 
-                return {
-                    ...clip,
-                    thumbnail: twitchClip.thumbnail_url,
-                    duration: formatDuration(twitchClip.duration)
-                };
+return {
+    ...clip,
+    thumbnail: twitchClip.thumbnail_url,
+    duration: formatDuration(twitchClip.duration),
+    viewCount: twitchClip.view_count
+};
             })
             .filter(Boolean);
 
@@ -989,6 +1024,18 @@ function formatDuration(seconds) {
     const remainingSeconds = totalSeconds % 60;
 
     return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
+
+function formatViews(count) {
+    if (count >= 1000000) {
+        return `${(count / 1000000).toFixed(1).replace(/\.0$/, "")}m`;
+    }
+
+    if (count >= 1000) {
+        return `${(count / 1000).toFixed(1).replace(/\.0$/, "")}k`;
+    }
+
+    return count.toString();
 }
 
         function setupFeatured() {
@@ -1123,9 +1170,28 @@ function renderClips() {
                     ${escapeHtml(clip.title)}
                 </h3>
 
-                <div class="clip-meta">
-                    ${escapeHtml(clip.category)}
-                </div>
+<div class="clip-meta">
+
+    <span class="category">
+        ${escapeHtml(clip.category)}
+    </span>
+
+    <span class="clip-stats">
+
+        <span class="views">
+            <img src="/eye.png" alt="">
+            ${formatViews(clip.viewCount)}
+        </span>
+
+        <span class="separator">|</span>
+
+        <span>
+            ${escapeHtml(clip.duration || "")}
+        </span>
+
+    </span>
+
+</div>
 
             </div>
         </div>
