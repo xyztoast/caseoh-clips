@@ -42,6 +42,10 @@
             min-height: 100vh;
         }
 
+        body.popup-open {
+            overflow: hidden;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
@@ -260,6 +264,17 @@
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, 0.35),
                 inset 0 0 50px rgba(145, 71, 255, 0.05);
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .featured:hover {
+            transform: translateY(-4px);
+            border-color: rgba(145, 71, 255, 0.5);
         }
 
         .featured-preview {
@@ -498,16 +513,10 @@
         }
 
         .clip-meta {
-            display: flex;
-            justify-content: space-between;
-
-            color: var(--muted);
+            color: var(--purple-light);
 
             font-size: 11px;
-        }
-
-        .clip-meta span:first-child {
-            color: var(--purple-light);
+            font-weight: 600;
         }
 
         .empty {
@@ -518,6 +527,122 @@
             text-align: center;
 
             color: var(--muted);
+        }
+
+        /* clip popup */
+
+        .clip-popup {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 999;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 35px;
+
+            background: rgba(0, 0, 0, 0.82);
+
+            backdrop-filter: blur(12px);
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition:
+                opacity 0.2s ease,
+                visibility 0.2s ease;
+        }
+
+        .clip-popup.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            width: min(1200px, 100%);
+
+            position: relative;
+
+            transform: scale(0.95) translateY(10px);
+
+            transition: transform 0.2s ease;
+        }
+
+        .clip-popup.open .popup-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup-video {
+            width: 100%;
+
+            aspect-ratio: 16 / 9;
+
+            border: none;
+            border-radius: 10px;
+
+            display: block;
+
+            background: black;
+
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, 0.65),
+                0 0 45px rgba(145, 71, 255, 0.12);
+        }
+
+        .popup-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding-top: 16px;
+        }
+
+        .popup-info h3 {
+            font-size: 18px;
+        }
+
+        .popup-info span {
+            color: var(--purple-light);
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .popup-close {
+            position: absolute;
+
+            top: -48px;
+            right: 0;
+
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid var(--border);
+            border-radius: 7px;
+
+            background: rgba(24, 24, 27, 0.95);
+            color: white;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .popup-close:hover {
+            background: var(--purple);
+            transform: scale(1.05);
         }
 
         /* footer */
@@ -560,6 +685,10 @@
             .clips {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .clip-popup {
+                padding: 20px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -591,6 +720,19 @@
 
             .button {
                 width: 100%;
+            }
+
+            .popup-close {
+                top: -48px;
+            }
+
+            .popup-info {
+                display: block;
+            }
+
+            .popup-info span {
+                display: block;
+                margin-top: 6px;
             }
         }
     </style>
@@ -648,7 +790,8 @@
             </div>
         </div>
 
-        <a href="#" id="featuredClip" class="featured">
+        <div class="featured" id="featuredClip">
+
             <div class="featured-preview">
                 <img id="featuredThumbnail" src="" alt="">
             </div>
@@ -657,7 +800,8 @@
                 <span>featured</span>
                 <h3 id="featuredTitle">loading...</h3>
             </div>
-        </a>
+
+        </div>
 
     </section>
 
@@ -691,6 +835,36 @@
         <strong>caseoh clips</strong> · a fan-made clip archive
     </footer>
 
+    <!-- popup -->
+
+    <div class="clip-popup" id="clipPopup">
+
+        <div class="popup-content">
+
+            <button class="popup-close" id="popupClose" aria-label="close">
+                ×
+            </button>
+
+            <iframe
+                class="popup-video"
+                id="popupVideo"
+                src=""
+                frameborder="0"
+                allowfullscreen
+                scrolling="no">
+            </iframe>
+
+            <div class="popup-info">
+                <div>
+                    <h3 id="popupTitle"></h3>
+                    <span id="popupCategory"></span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
     <script>
         const clipGrid = document.getElementById("clipGrid");
         const searchInput = document.getElementById("searchInput");
@@ -700,6 +874,12 @@
         const featuredThumbnail = document.getElementById("featuredThumbnail");
         const featuredTitle = document.getElementById("featuredTitle");
 
+        const clipPopup = document.getElementById("clipPopup");
+        const popupVideo = document.getElementById("popupVideo");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupCategory = document.getElementById("popupCategory");
+        const popupClose = document.getElementById("popupClose");
+
         const filters = document.querySelectorAll(".filter");
 
         let clips = [];
@@ -707,7 +887,9 @@
 
         async function loadClips() {
             try {
-                const response = await fetch("clips.json");
+                const response = await fetch("clips.json", {
+                    cache: "no-store"
+                });
 
                 if (!response.ok) {
                     throw new Error("could not load clips.json");
@@ -744,13 +926,49 @@
 
             featuredTitle.textContent = featured.title;
 
-            featuredClip.href = createTwitchEmbedUrl(featured.id);
+            featuredClip.onclick = () => {
+                openClip(featured);
+            };
         }
 
-        function createTwitchEmbedUrl(id) {
+        function createEmbedUrl(id) {
             const parent = window.location.hostname;
 
-            return `https://clips.twitch.tv/embed?clip=${encodeURIComponent(id)}&parent=${encodeURIComponent(parent)}&autoplay=true&muted=false`;
+            return `https://clips.twitch.tv/embed?clip=${encodeURIComponent(id)}&parent=${encodeURIComponent(parent)}&autoplay=true`;
+        }
+
+        function openClip(clip) {
+            const clipUrl =
+                `${window.location.origin}${window.location.pathname}?clip=${encodeURIComponent(clip.id)}`;
+
+            window.history.pushState(
+                { clip: clip.id },
+                "",
+                clipUrl
+            );
+
+            popupVideo.src = createEmbedUrl(clip.id);
+
+            popupTitle.textContent = clip.title;
+            popupCategory.textContent = clip.category;
+
+            clipPopup.classList.add("open");
+            document.body.classList.add("popup-open");
+        }
+
+        function closeClip(updateUrl = true) {
+            clipPopup.classList.remove("open");
+            document.body.classList.remove("popup-open");
+
+            popupVideo.src = "";
+
+            if (updateUrl) {
+                window.history.pushState(
+                    {},
+                    "",
+                    window.location.pathname
+                );
+            }
         }
 
         function renderClips() {
@@ -783,41 +1001,52 @@
             }
 
             clipGrid.innerHTML = filteredClips.map(clip => `
-                <a
-                    href="${createTwitchEmbedUrl(clip.id)}"
+                <div
                     class="clip"
-                    target="_blank"
-                    rel="noopener"
+                    data-clip-id="${escapeHtml(clip.id)}"
                 >
                     <div class="thumbnail">
+
                         <img
                             src="${escapeHtml(clip.thumbnail)}"
                             alt="${escapeHtml(clip.title)}"
                             loading="lazy"
                         >
 
-                        <span class="duration">
-                            ${escapeHtml(clip.duration || "")}
-                        </span>
+                        ${
+                            clip.duration
+                                ? `<span class="duration">${escapeHtml(clip.duration)}</span>`
+                                : ""
+                        }
+
                     </div>
 
                     <div class="clip-info">
+
                         <h3>
                             ${escapeHtml(clip.title)}
                         </h3>
 
                         <div class="clip-meta">
-                            <span>
-                                ${escapeHtml(clip.category)}
-                            </span>
-
-                            <span>
-                                ${escapeHtml(clip.views || "")} views
-                            </span>
+                            ${escapeHtml(clip.category)}
                         </div>
+
                     </div>
-                </a>
+                </div>
             `).join("");
+
+            document.querySelectorAll(".clip").forEach(element => {
+                element.addEventListener("click", () => {
+
+                    const clip = clips.find(
+                        item => item.id === element.dataset.clipId
+                    );
+
+                    if (clip) {
+                        openClip(clip);
+                    }
+                });
+            });
         }
 
         function escapeHtml(value) {
@@ -828,10 +1057,35 @@
             return div.innerHTML;
         }
 
+        function openClipFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+
+            const clipId = params.get("clip");
+
+            if (!clipId) {
+                return;
+            }
+
+            const clip = clips.find(item => item.id === clipId);
+
+            if (!clip) {
+                return;
+            }
+
+            popupVideo.src = createEmbedUrl(clip.id);
+
+            popupTitle.textContent = clip.title;
+            popupCategory.textContent = clip.category;
+
+            clipPopup.classList.add("open");
+            document.body.classList.add("popup-open");
+        }
+
         searchInput.addEventListener("input", renderClips);
 
         filters.forEach(filter => {
             filter.addEventListener("click", () => {
+
                 filters.forEach(item => {
                     item.classList.remove("active");
                 });
@@ -844,7 +1098,38 @@
             });
         });
 
-        loadClips();
+        popupClose.addEventListener("click", () => {
+            closeClip();
+        });
+
+        clipPopup.addEventListener("click", event => {
+            if (event.target === clipPopup) {
+                closeClip();
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && clipPopup.classList.contains("open")) {
+                closeClip();
+            }
+        });
+
+        window.addEventListener("popstate", () => {
+            const params = new URLSearchParams(window.location.search);
+
+            if (!params.get("clip")) {
+                closeClip(false);
+            } else {
+                openClipFromUrl();
+            }
+        });
+
+        async function start() {
+            await loadClips();
+            openClipFromUrl();
+        }
+
+        start();
     </script>
 
 </body>
