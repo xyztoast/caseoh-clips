@@ -3,13 +3,13 @@
     "id": "HomelyAntsyLyrebirdSmoocherZ-gti3fZiX_Xp_65x0",
     "title": "bathroom workout",
     "category": "funny",
-    "featured": true
+    "featured": false
   },
   {
     "id": "DependableKitschyRaisinEagleEye-M3kYF3-ecaBp2bVm",
     "title": "sounds like its saying red thong",
     "category": "funny",
-    "featured": false
+    "featured": true
   },
   {
     "id": "PlayfulBrightAardvarkWow-5h0tlSz4LfQxD9mv",
@@ -32,6 +32,12 @@
   {
     "id": "GentleBlushingStarlingSoBayed-BsYNKJ7tCOgo1lx6",
     "title": "smeared doodoo",
+    "category": "funny",
+    "featured": false
+  },
+  {
+    "id": "SmallAdorableCodShazBotstix-xN2dAdKf-iTj-nR0",
+    "title": "TIRAMISU",
     "category": "funny",
     "featured": false
   }
