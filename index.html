@@ -1173,34 +1173,28 @@ function renderClips() {
             class="clip"
             data-clip-id="${escapeHtml(clip.id)}"
         >
-            <div class="thumbnail">
+<div class="thumbnail">
 
-                <img
-                    src="${escapeHtml(clip.thumbnail)}"
-                    alt="${escapeHtml(clip.title)}"
-                    loading="lazy"
-                >
+    <img
+        src="${escapeHtml(clip.thumbnail)}"
+        alt="${escapeHtml(clip.title)}"
+        loading="lazy"
+    >
 
-${
-    clip.duration
-        ? `
-            <span class="duration">
-                <span class="views">
-                    <img src="/eye.png" alt="">
-                    ${formatViews(clip.viewCount)}
-                </span>
+    <span class="duration">
+        <span class="views">
+            <img src="/eye.png" alt="">
+            ${formatViews(clip.viewCount)}
+        </span>
 
-                <span class="separator">|</span>
+        <span class="separator">|</span>
 
-                <span>
-                    ${escapeHtml(clip.duration)}
-                </span>
-            </span>
-        `
-        : ""
-}
+        <span>
+            ${escapeHtml(clip.duration || "")}
+        </span>
+    </span>
 
-            </div>
+</div>
 
             <div class="clip-info">
 
